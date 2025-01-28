@@ -18,15 +18,26 @@ public class Register extends JFrame implements ActionListener {
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(new Color(0, 102, 102));
         leftPanel.setBounds(0, 0, 400, 500);
+        leftPanel.setLayout(null); // Use null layout to position components manually
         add(leftPanel);
-        
-       /* submit = new JButton("Submit");
-        submit.setBounds(200, 270, 100, 30);
-        submit.addActionListener(this);
-        submit.setBackground(new Color(0, 102, 102)); // Set background color to green
-        submit.setForeground(Color.WHITE); // Set font color to white
-        submit.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Set font to Tahoma, bold, size 14
-        rightPanel.add(submit);*/
+
+        // Load the logo image
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\Ahnaf\\Downloads\\pngegg.png"); // Replace with the actual path to your logo image
+        Image logoImage = logoIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Resize the image if necessary
+        logoIcon = new ImageIcon(logoImage); // Convert back to ImageIcon
+
+        // Create a JLabel to display the logo
+        JLabel logoLabel = new JLabel(logoIcon);
+        logoLabel.setBounds(100, 50, 200, 200); // Position and size of the logo
+        leftPanel.add(logoLabel);
+
+        // Create a JLabel to display the text "csedu airlines"
+        JLabel airlineLabel = new JLabel("CSEDU AIRLINES");
+        airlineLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        airlineLabel.setForeground(Color.WHITE);
+        airlineLabel.setBounds(120, 260, 200, 30); // Position and size of the text
+        leftPanel.add(airlineLabel);
+
         // Right Panel
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(Color.WHITE);
@@ -116,7 +127,7 @@ public class Register extends JFrame implements ActionListener {
                 return;
             }
 
-       try {
+            try {
                 Conn c = new Conn();
 
                 // Step 1: Check if the username already exists in the database
@@ -145,7 +156,7 @@ public class Register extends JFrame implements ActionListener {
             }
         } else if (ae.getSource() == back) {
             setVisible(false);
-            new Login(); 
+            new Login();
         }
     }
 
