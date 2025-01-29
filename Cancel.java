@@ -1,6 +1,5 @@
 
-package airlinemanagementsystem;
-
+package csedu.flight.mangement.system;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,22 +90,34 @@ public class Cancel extends JFrame implements ActionListener{
         flight.addActionListener(this);
         add(flight);
         
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("csedu/flight/mangement/system/icons/cancel.png"));
+        Image i2 = i1.getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT);
+        ImageIcon i3 = new ImageIcon(i2);
+        JLabel image = new JLabel(i3);
+        image.setBounds(470, 100, 250, 250);
+        add(image);
+        
         setSize(800, 450);
         setLocation(350, 150);
         setVisible(true);
     }
     
-    public void actionPerformed(ActionEvent ae) {
+public void actionPerformed(ActionEvent ae) {
+
+        String loggedInUser = UserSession.loggedInUser;
         if (ae.getSource() == fetchButton) {
             String pnr = tfpnr.getText();
             
             try {
                 Conn conn = new Conn();
 
-                String query = "select * from reservation where PNR = '"+pnr+"'";
-
+                 String query = "SELECT * FROM reservation WHERE PNR = '" + pnr + "' AND added_by = '" + loggedInUser + "'";
+           
                 ResultSet rs = conn.s.executeQuery(query);
-                
+                if (!rs.isBeforeFirst()) { // Check if the ResultSet is empty
+                    JOptionPane.showMessageDialog(null, "No Information Found or You are not authorized to view this data.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (rs.next()) {
                     tfname.setText(rs.getString("name")); 
                     lblfcode.setText(rs.getString("flightcode")); 
@@ -144,4 +155,5 @@ public class Cancel extends JFrame implements ActionListener{
     public static void main(String[] args) {
         new Cancel();
     }
+}
 }
