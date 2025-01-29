@@ -1,11 +1,13 @@
 package csedu.flight.mangement.system;
 
+package airlinemanagementsystem;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 
-// Base class for shared UI features
+
 abstract class BaseWindow extends JFrame {
 
     public BaseWindow(String title, int width, int height) {
@@ -22,6 +24,7 @@ abstract class BaseWindow extends JFrame {
         button.setFont(font);
         button.setBackground(bgColor);
         button.setForeground(fgColor);
+        button.setFocusPainted(false);
         return button;
     }
 
@@ -42,13 +45,12 @@ abstract class BaseWindow extends JFrame {
     }
 }
 
-// Review posting class
-// Review posting class
+
 public class Review extends BaseWindow implements ActionListener {
 
     private JTextArea reviewArea;
     private JButton postButton, viewReviewsButton, backButton;
-    private JLabel usernameLabel, charLimitLabel, ratingLabel;
+    private JLabel usernameLabel, charLimit, ratingLabel;
     private JComboBox<Integer> ratingComboBox;
 
     public Review() {
@@ -57,13 +59,13 @@ public class Review extends BaseWindow implements ActionListener {
 
         getContentPane().setBackground(new Color(245, 245, 245));
 
-        // Back Button
+        
         backButton = createButton("Back", 80, 30, new Font("Tahoma", Font.BOLD, 12), new Color(0, 123, 255), Color.WHITE);
         backButton.setBounds(10, 10, 80, 30);
         backButton.addActionListener(this);
         add(backButton);
 
-        // Display logged-in username
+        
         usernameLabel = createLabel("Logged in as: " + UserSession.loggedInUser, new Font("Tahoma", Font.BOLD, 14), new Color(50, 50, 50));
         usernameLabel.setBounds(100, 20, 400, 30);
         add(usernameLabel);
@@ -72,12 +74,12 @@ public class Review extends BaseWindow implements ActionListener {
         titleLabel.setBounds(50, 60, 200, 30);
         add(titleLabel);
 
-        // Review Area
+        
         reviewArea = createTextArea(new Font("Tahoma", Font.PLAIN, 14), true, true);
         reviewArea.setBounds(50, 100, 500, 150);
         reviewArea.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
 
-        // Limit the text to 500 characters
+       
         reviewArea.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 if (reviewArea.getText().length() >= 500) {
@@ -87,12 +89,12 @@ public class Review extends BaseWindow implements ActionListener {
         });
         add(reviewArea);
 
-        // Character limit label
-        charLimitLabel = createLabel("Character limit: 500", new Font("Tahoma", Font.ITALIC, 12), new Color(120, 120, 120));
-        charLimitLabel.setBounds(50, 260, 200, 20);
-        add(charLimitLabel);
+        
+        charLimit = createLabel("Character limit: 500", new Font("Tahoma", Font.ITALIC, 12), new Color(120, 120, 120));
+        charLimit.setBounds(50, 260, 200, 20);
+        add(charLimit);
 
-        // Rating Label and ComboBox
+        
         ratingLabel = createLabel("Rating (1-5):", new Font("Tahoma", Font.BOLD, 14), Color.BLACK);
         ratingLabel.setBounds(50, 290, 100, 20);
         add(ratingLabel);
@@ -102,13 +104,13 @@ public class Review extends BaseWindow implements ActionListener {
         ratingComboBox.setBounds(160, 290, 50, 20);
         add(ratingComboBox);
 
-        // Post Review Button
+        
         postButton = createButton("Post Review", 150, 30, new Font("Tahoma", Font.BOLD, 14), new Color(0, 123, 255), Color.WHITE);
         postButton.setBounds(50, 330, 150, 30);
         postButton.addActionListener(this);
         add(postButton);
 
-        // View Reviews Button
+        
         viewReviewsButton = createButton("View Reviews", 150, 30, new Font("Tahoma", Font.BOLD, 14), new Color(0, 123, 255), Color.WHITE);
         viewReviewsButton.setBounds(250, 330, 150, 30);
         viewReviewsButton.addActionListener(this);
@@ -138,9 +140,9 @@ public class Review extends BaseWindow implements ActionListener {
                 e.printStackTrace();
             }
         } else if (ae.getSource() == viewReviewsButton) {
-            new Reviews1Window(); // Open the ReviewsWindow
+            new Reviews1Window(); 
         } else if (ae.getSource() == backButton) {
-            dispose(); // Close the current window
+            dispose(); 
         }
     }
 
@@ -161,7 +163,7 @@ class Reviews1Window extends BaseWindow {
         super("View Reviews", 600, 400);
         setLayout(new BorderLayout());
 
-        // Search Panel
+        
         JPanel searchPanel = new JPanel(new FlowLayout());
         searchField = new JTextField(10);
         searchField.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -173,8 +175,7 @@ class Reviews1Window extends BaseWindow {
         searchPanel.add(searchButton);
 
         add(searchPanel, BorderLayout.NORTH);
-
-        // Reviews Display Area
+ 
         reviewsDisplayArea = createTextArea(new Font("Tahoma", Font.PLAIN, 14), false, true);
         JScrollPane scrollPane = new JScrollPane(reviewsDisplayArea);
         add(scrollPane, BorderLayout.CENTER);
@@ -189,7 +190,6 @@ class Reviews1Window extends BaseWindow {
             Conn conn = new Conn();
             String query = "SELECT username, review, rating, timestamp FROM reviews";
 
-            // Add rating filter if search field is not empty
             String ratingFilter = searchField.getText().trim();
             if (!ratingFilter.isEmpty()) {
                 query += " WHERE rating = " + ratingFilter;
@@ -209,6 +209,8 @@ class Reviews1Window extends BaseWindow {
                 reviews.append("Rating: ").append(rating).append("/5\n");
                 reviews.append("Review: ").append(review).append("\n");
                 reviews.append("Posted on: ").append(timestamp).append("\n\n");
+                
+                reviews.append("----------------------------------------\n\n");
             }
 
             reviewsDisplayArea.setText(reviews.toString());
