@@ -1,4 +1,5 @@
-package airlinemanagementsystem;
+ 
+package csedu.flight.mangement.system;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.sql.*;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.util.*;
 
 public class BoardingPass extends JFrame implements ActionListener {
 
@@ -138,23 +140,27 @@ public class BoardingPass extends JFrame implements ActionListener {
         printButton.setBounds(680, 350, 120, 25);
         printButton.addActionListener(this);
         contentPanel.add(printButton);
-
-        setSize(1000, 550);
+ 
+        setSize(1000, 500);
         setLocation(300, 150);
         setVisible(true);
     }
-
-    public void actionPerformed(ActionEvent ae) {
+    
+      public void actionPerformed(ActionEvent ae) {
+        String loggedInUser = UserSession.loggedInUser;
         if (ae.getSource() == fetchButton) {
             String pnr = tfpnr.getText();
 
             try {
                 Conn conn = new Conn();
 
-                String query = "SELECT * FROM reservation WHERE PNR = '" + pnr + "'";
-
+                String query = "SELECT * FROM reservation WHERE PNR = '" + pnr + "' AND added_by = '" + loggedInUser + "'";
+           
                 ResultSet rs = conn.s.executeQuery(query);
-
+                if (!rs.isBeforeFirst()) { // Check if the ResultSet is empty
+                    JOptionPane.showMessageDialog(null, "No Information Found or You are not authorized to view this data.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (rs.next()) {
                     tfname.setText(rs.getString("name"));
                     tfnationality.setText(rs.getString("nationality"));
