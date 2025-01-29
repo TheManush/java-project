@@ -1,4 +1,4 @@
-package airlinemanagementsystem;
+package csedu.flight.mangement.system;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.awt.event.*;
 import java.sql.*;
 
 public class Register extends JFrame implements ActionListener {
-    JTextField tfFullName, tfUsername;
+    JTextField tfFullName, tfUsername, tfEmail;
     JPasswordField tfPassword, tfConfirmPassword;
     JButton register, back;
 
@@ -14,31 +14,26 @@ public class Register extends JFrame implements ActionListener {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
 
-        // Left Panel
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(new Color(0, 102, 102));
         leftPanel.setBounds(0, 0, 400, 500);
-        leftPanel.setLayout(null); // Use null layout to position components manually
+        leftPanel.setLayout(null); 
         add(leftPanel);
 
-        // Load the logo image
-        ImageIcon logoIcon = new ImageIcon("C:\\Users\\Ahnaf\\Downloads\\pngegg.png"); // Replace with the actual path to your logo image
-        Image logoImage = logoIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Resize the image if necessary
-        logoIcon = new ImageIcon(logoImage); // Convert back to ImageIcon
+        ImageIcon logoIcon = new ImageIcon("csedu/flight/mangement/system/icons/pngegg.png"); 
+        Image logoImage = logoIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); 
+        logoIcon = new ImageIcon(logoImage); 
 
-        // Create a JLabel to display the logo
         JLabel logoLabel = new JLabel(logoIcon);
-        logoLabel.setBounds(100, 50, 200, 200); // Position and size of the logo
+        logoLabel.setBounds(100, 50, 200, 200); 
         leftPanel.add(logoLabel);
 
-        // Create a JLabel to display the text "csedu airlines"
         JLabel airlineLabel = new JLabel("CSEDU AIRLINES");
         airlineLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         airlineLabel.setForeground(Color.WHITE);
-        airlineLabel.setBounds(120, 260, 200, 30); // Position and size of the text
+        airlineLabel.setBounds(120, 260, 200, 30); 
         leftPanel.add(airlineLabel);
 
-        // Right Panel
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(Color.WHITE);
         rightPanel.setBounds(400, 0, 400, 500);
@@ -69,26 +64,35 @@ public class Register extends JFrame implements ActionListener {
         tfUsername.setBounds(150, 150, 200, 25);
         rightPanel.add(tfUsername);
 
+        JLabel lblEmail = new JLabel("Email");
+        lblEmail.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblEmail.setBounds(50, 200, 100, 20);
+        rightPanel.add(lblEmail);
+
+        tfEmail = new JTextField();
+        tfEmail.setBounds(150, 200, 200, 25);
+        rightPanel.add(tfEmail);
+
         JLabel lblPassword = new JLabel("Password");
         lblPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblPassword.setBounds(50, 200, 100, 20);
+        lblPassword.setBounds(50, 250, 100, 20);
         rightPanel.add(lblPassword);
 
         tfPassword = new JPasswordField();
-        tfPassword.setBounds(150, 200, 200, 25);
+        tfPassword.setBounds(150, 250, 200, 25);
         rightPanel.add(tfPassword);
 
         JLabel lblConfirmPassword = new JLabel("Confirm Password");
         lblConfirmPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblConfirmPassword.setBounds(30, 250, 120, 20);
+        lblConfirmPassword.setBounds(30, 300, 120, 20);
         rightPanel.add(lblConfirmPassword);
 
         tfConfirmPassword = new JPasswordField();
-        tfConfirmPassword.setBounds(150, 250, 200, 25);
+        tfConfirmPassword.setBounds(150, 300, 200, 25);
         rightPanel.add(tfConfirmPassword);
 
         register = new JButton("Register");
-        register.setBounds(70, 320, 120, 30);
+        register.setBounds(70, 370, 120, 30);
         register.addActionListener(this);
         register.setFont(new Font("Segoe UI", Font.BOLD, 14));
         register.setForeground(Color.WHITE);
@@ -96,7 +100,7 @@ public class Register extends JFrame implements ActionListener {
         rightPanel.add(register);
 
         back = new JButton("Back");
-        back.setBounds(220, 320, 120, 30);
+        back.setBounds(220, 370, 120, 30);
         back.addActionListener(this);
         back.setFont(new Font("Segoe UI", Font.BOLD, 14));
         back.setForeground(Color.WHITE);
@@ -112,10 +116,11 @@ public class Register extends JFrame implements ActionListener {
         if (ae.getSource() == register) {
             String fullName = tfFullName.getText();
             String username = tfUsername.getText();
+            String email = tfEmail.getText();
             String password = new String(tfPassword.getPassword());
             String confirmPassword = new String(tfConfirmPassword.getPassword());
 
-            if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            if (fullName.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "All fields are required.");
                 return;
             }
@@ -130,26 +135,26 @@ public class Register extends JFrame implements ActionListener {
             try {
                 Conn c = new Conn();
 
-                // Step 1: Check if the username already exists in the database
-                String checkQuery = "SELECT * FROM login WHERE username = ?";
-                PreparedStatement psCheck = c.c.prepareStatement(checkQuery); // Directly use the "c" field
+                String checkQuery = "SELECT * FROM login WHERE username = ? OR email = ?";
+                PreparedStatement psCheck = c.c.prepareStatement(checkQuery);
                 psCheck.setString(1, username);
+                psCheck.setString(2, email);
                 ResultSet rs = psCheck.executeQuery();
 
                 if (rs.next()) {
-                    // Username already exists
-                    JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different username.");
+                    JOptionPane.showMessageDialog(null, "Username or Email already exists. Please choose a different one.");
                 } else {
-                    // Step 2: Insert the new user if username doesn't exist
-                    String insertQuery = "INSERT INTO login (username, password) VALUES (?, ?)";
+                    String insertQuery = "INSERT INTO login (username, fullName, password, email) VALUES (?, ?, ?, ?)";
                     PreparedStatement psInsert = c.c.prepareStatement(insertQuery);
                     psInsert.setString(1, username);
-                    psInsert.setString(2, password);
+                    psInsert.setString(2, fullName);
+                    psInsert.setString(3, password);
+                    psInsert.setString(4, email);
                     psInsert.executeUpdate();
 
                     JOptionPane.showMessageDialog(null, "Registration successful!");
                     setVisible(false);
-                    new Login(); // Redirect to Login screen
+                    new Login();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
