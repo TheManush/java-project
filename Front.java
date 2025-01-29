@@ -1,4 +1,4 @@
-package airlinemanagementsystem;
+package csedu.flight.mangement.system;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.awt.event.*;
 
 public class Front extends JFrame implements ActionListener {
 
-    JButton homeButton, ReviewButton, faqsButton, logoutButton;
+    JButton homeButton, ReviewButton, faqsButton, logoutButton, profileButton;
 
     public Front() {
         setTitle("Front Screen");
@@ -38,8 +38,17 @@ public class Front extends JFrame implements ActionListener {
         logoutButton.addActionListener(this);
         topPanel.add(logoutButton);
 
+        // Profile Button
+        profileButton = new JButton("Profile");
+        profileButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        profileButton.setBackground(new Color(0, 153, 76)); // Green color for Profile button
+        profileButton.setForeground(Color.WHITE);
+        profileButton.setBounds(910, 10, 120, 40); // Below the logout button
+        profileButton.addActionListener(this);
+        topPanel.add(profileButton);
+
         // Background Image
-        ImageIcon backgroundImage = new ImageIcon("C:\\Users\\Ahnaf\\Downloads\\sma.jpg"); // Update with your JPG file path
+        ImageIcon backgroundImage = new ImageIcon("C:\\Users\\saadb\\OneDrive\\Documents\\NetBeansProjects\\CSEDU Flight Mangement System\\src\\csedu\\flight\\mangement\\system\\icons\\sma.jpg"); // Update with your JPG file path
         Image scaledImage = backgroundImage.getImage().getScaledInstance(1200, 690, Image.SCALE_DEFAULT); // Adjusted height
         JLabel background = new JLabel(new ImageIcon(scaledImage));
         background.setBounds(0, 60, 1200, 690); // Adjusted dimensions
@@ -85,7 +94,9 @@ public class Front extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == homeButton) {
-            new Home(); // Redirect to Home page
+            this.dispose();
+            new Home();
+
         } else if (ae.getSource() == ReviewButton) {
             new Review(); // Redirect to Review page
         } else if (ae.getSource() == faqsButton) {
@@ -98,6 +109,8 @@ public class Front extends JFrame implements ActionListener {
                 this.dispose(); // Close the current window
                 new Login(); // Redirect to the login screen
             }
+        } else if (ae.getSource() == profileButton) {
+            new Profile(); // Open the Profile window
         }
     }
 
