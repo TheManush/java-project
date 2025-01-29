@@ -179,7 +179,6 @@ public class BoardingPass extends JFrame implements ActionListener {
             printWindowAsPDF();
         }
     }
-
 private void printWindowAsPDF() {
     try {
         // Check if PNR is empty
@@ -189,18 +188,36 @@ private void printWindowAsPDF() {
             return;
         }
 
+        // Open a file chooser for saving the PDF
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Boarding Pass");
+        fileChooser.setSelectedFile(new java.io.File("BoardingPass_" + pnr + ".pdf")); // Default file name
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection != JFileChooser.APPROVE_OPTION) {
+            // User canceled or closed the dialog
+            return;
+        }
+
+        // Get the selected file path
+        java.io.File fileToSave = fileChooser.getSelectedFile();
+        String filePath = fileToSave.getAbsolutePath();
+
+        // Ensure the file has the .pdf extension
+        if (!filePath.endsWith(".pdf")) {
+            filePath += ".pdf";
+        }
+
+        // Print the file path for debugging
+        System.out.println("Saving PDF to: " + filePath);
+
         // Capture the window as an image
         BufferedImage image = new Robot().createScreenCapture(this.getBounds());
 
-        // Generate a unique filename using the PNR number
-        String fileName = "BoardingPass_" + pnr + ".pdf"; // Example: BoardingPass_123456.pdf
-
-        // Print the file path for debugging
-        System.out.println("Saving PDF to: " + new java.io.File(fileName).getAbsolutePath());
-
         // Create a PDF document
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(fileName));
+        PdfWriter.getInstance(document, new FileOutputStream(filePath));
         document.open();
 
         // Convert the image to an iText Image
@@ -214,14 +231,15 @@ private void printWindowAsPDF() {
 
         document.close();
 
-        JOptionPane.showMessageDialog(null, "Boarding pass saved as " + fileName);
+        JOptionPane.showMessageDialog(this, "Boarding pass saved as " + filePath);
     } catch (Exception e) {
         e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Error generating PDF: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "Error generating PDF: " + e.getMessage());
     }
 }
 
     public static void main(String[] args) {
+        UserSession.loggedInUser = "ahnaf"; 
         new BoardingPass();
     }
 }
