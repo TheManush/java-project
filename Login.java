@@ -14,29 +14,30 @@ public class Login extends JFrame implements ActionListener {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         setResizable(false);
+
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(new Color(0, 102, 102));
-        leftPanel.setBounds(0, 0, 400, 500);
+        leftPanel.setBounds(0, 0, 400, 600); 
         leftPanel.setLayout(null);
         add(leftPanel);
 
-        ImageIcon logoIcon = new ImageIcon("csedu/flight/mangement/system/icons/pngegg.png");
+        ImageIcon logoIcon = new ImageIcon("C:\\Users\\Ahnaf\\Documents\\NetBeansProjects\\AirlineManagementSystem\\src\\airlinemanagementsystem\\icons\\pngegg.png");
         Image logoImage = logoIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         logoIcon = new ImageIcon(logoImage);
 
         JLabel logoLabel = new JLabel(logoIcon);
-        logoLabel.setBounds(100, 50, 200, 200);
+        logoLabel.setBounds(100, 150, 200, 200);
         leftPanel.add(logoLabel);
 
-        JLabel airlineLabel = new JLabel("CSEDU AIRLINES");
+        JLabel airlineLabel = new JLabel("SIGN UP NOW");
         airlineLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         airlineLabel.setForeground(Color.WHITE);
-        airlineLabel.setBounds(120, 260, 200, 30);
+        airlineLabel.setBounds(100, 360, 200, 30);
         leftPanel.add(airlineLabel);
 
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(Color.WHITE);
-        rightPanel.setBounds(400, 0, 400, 500);
+        rightPanel.setBounds(400, 0, 400, 600); 
         rightPanel.setLayout(null);
         add(rightPanel);
 
@@ -48,24 +49,24 @@ public class Login extends JFrame implements ActionListener {
 
         JLabel lblusername = new JLabel("Username");
         lblusername.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblusername.setBounds(50, 100, 100, 20);
+        lblusername.setBounds(50, 120, 100, 20); 
         rightPanel.add(lblusername);
 
         tfusername = new JTextField();
-        tfusername.setBounds(50, 130, 300, 25);
+        tfusername.setBounds(50, 150, 300, 25); 
         rightPanel.add(tfusername);
 
         JLabel lblpassword = new JLabel("Password");
         lblpassword.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblpassword.setBounds(50, 180, 100, 20);
+        lblpassword.setBounds(50, 200, 100, 20); 
         rightPanel.add(lblpassword);
 
         tfpassword = new JPasswordField();
-        tfpassword.setBounds(50, 210, 300, 25);
+        tfpassword.setBounds(50, 230, 300, 25); 
         rightPanel.add(tfpassword);
 
         reset = new JButton("Reset");
-        reset.setBounds(70, 270, 100, 30);
+        reset.setBounds(70, 290, 100, 30); 
         reset.addActionListener(this);
         reset.setBackground(new Color(0, 102, 102));
         reset.setForeground(Color.WHITE);
@@ -73,7 +74,7 @@ public class Login extends JFrame implements ActionListener {
         rightPanel.add(reset);
 
         submit = new JButton("Submit");
-        submit.setBounds(200, 270, 100, 30);
+        submit.setBounds(200, 290, 100, 30); 
         submit.addActionListener(this);
         submit.setBackground(new Color(0, 102, 102));
         submit.setForeground(Color.WHITE);
@@ -81,7 +82,7 @@ public class Login extends JFrame implements ActionListener {
         rightPanel.add(submit);
 
         register = new JButton("Register");
-        register.setBounds(220, 400, 100, 30);
+        register.setBounds(220, 500, 100, 30); 
         register.addActionListener(this);
         register.setBackground(new Color(0, 102, 102));
         register.setForeground(Color.WHITE);
@@ -90,20 +91,20 @@ public class Login extends JFrame implements ActionListener {
 
         JLabel lblRegisterPrompt = new JLabel("Don't have an account?");
         lblRegisterPrompt.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblRegisterPrompt.setBounds(50, 400, 150, 20);
+        lblRegisterPrompt.setBounds(50, 500, 150, 20); 
         rightPanel.add(lblRegisterPrompt);
 
         // Forgot Password Button
         forgotPassword = new JButton("Forgot Password?");
-        forgotPassword.setBounds(85, 325, 200, 28);
+        forgotPassword.setBounds(100, 350, 200, 28); 
         forgotPassword.addActionListener(this);
         forgotPassword.setBackground(new Color(0, 102, 102));
         forgotPassword.setForeground(Color.WHITE);
         forgotPassword.setFont(new Font("Segoe UI", Font.BOLD, 14));
         rightPanel.add(forgotPassword);
 
-        setSize(800, 500);
-        setLocationRelativeTo(null);
+        setSize(800, 600); 
+        setLocationRelativeTo(null); 
         setVisible(true);
     }
 
@@ -122,9 +123,9 @@ public class Login extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Login Successful");
 
                     if (username.equals("admin")) {
-                        new AdminDashboard(); // Admin dashboard
+                        new AdminDashboard(); 
                     } else {
-                        new Front(); // User dashboard
+                        new Front(); 
                     }
                     setVisible(false);
                 } else {
@@ -142,8 +143,7 @@ public class Login extends JFrame implements ActionListener {
             setVisible(false);
             new Register();
         } else if (ae.getSource() == forgotPassword) {
-            // Open ForgotPassword interface directly when clicked
-            new ForgotPassword(); // Pass no username, let the user enter during the process.
+            new ForgetPassword(); 
         }
     }
 
