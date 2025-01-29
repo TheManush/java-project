@@ -1,54 +1,81 @@
-package airlinemanagementsystem;
+package csedu.flight.mangement.system;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 
-public class Review extends JFrame implements ActionListener {
+// Base class for shared UI features
+abstract class BaseWindow extends JFrame {
 
-    JTextArea reviewArea;
-    JButton postButton, viewReviewsButton, backButton;
-    JLabel usernameLabel, charLimitLabel, ratingLabel;
-    JComboBox<Integer> ratingComboBox;
+    public BaseWindow(String title, int width, int height) {
+        setTitle(title);
+        setSize(width, height);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setResizable(false);
+    }
+
+    protected JButton createButton(String text, int width, int height, Font font, Color bgColor, Color fgColor) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(width, height));
+        button.setFont(font);
+        button.setBackground(bgColor);
+        button.setForeground(fgColor);
+        return button;
+    }
+
+    protected JLabel createLabel(String text, Font font, Color color) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        label.setForeground(color);
+        return label;
+    }
+
+    protected JTextArea createTextArea(Font font, boolean editable, boolean lineWrap) {
+        JTextArea textArea = new JTextArea();
+        textArea.setFont(font);
+        textArea.setEditable(editable);
+        textArea.setLineWrap(lineWrap);
+        textArea.setWrapStyleWord(lineWrap);
+        return textArea;
+    }
+}
+
+// Review posting class
+// Review posting class
+public class Review extends BaseWindow implements ActionListener {
+
+    private JTextArea reviewArea;
+    private JButton postButton, viewReviewsButton, backButton;
+    private JLabel usernameLabel, charLimitLabel, ratingLabel;
+    private JComboBox<Integer> ratingComboBox;
 
     public Review() {
-        setTitle("User Reviews");
+        super("User Reviews", 600, 450);
         setLayout(null);
-        getContentPane().setBackground(new Color(245, 245, 245)); // Soft background color
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Disable close operation
-        setResizable(false); // Disable resizing
+
+        getContentPane().setBackground(new Color(245, 245, 245));
 
         // Back Button
-        backButton = new JButton("Back");
+        backButton = createButton("Back", 80, 30, new Font("Tahoma", Font.BOLD, 12), new Color(0, 123, 255), Color.WHITE);
         backButton.setBounds(10, 10, 80, 30);
-        backButton.setBackground(new Color(0, 123, 255)); // Bright button color
-        backButton.setForeground(Color.WHITE);
-        backButton.setFont(new Font("Tahoma", Font.BOLD, 12));
         backButton.addActionListener(this);
         add(backButton);
 
         // Display logged-in username
-        usernameLabel = new JLabel("Logged in as: " + UserSession.loggedInUser);
-        usernameLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        usernameLabel = createLabel("Logged in as: " + UserSession.loggedInUser, new Font("Tahoma", Font.BOLD, 14), new Color(50, 50, 50));
         usernameLabel.setBounds(100, 20, 400, 30);
-        usernameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        usernameLabel.setForeground(new Color(50, 50, 50));
         add(usernameLabel);
 
-        JLabel titleLabel = new JLabel("Post Your Review:");
-        titleLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+        JLabel titleLabel = createLabel("Post Your Review:", new Font("Tahoma", Font.BOLD, 16), new Color(50, 50, 50));
         titleLabel.setBounds(50, 60, 200, 30);
-        titleLabel.setForeground(new Color(50, 50, 50));
         add(titleLabel);
 
-        // Large text area for review
-        reviewArea = new JTextArea();
+        // Review Area
+        reviewArea = createTextArea(new Font("Tahoma", Font.PLAIN, 14), true, true);
         reviewArea.setBounds(50, 100, 500, 150);
-        reviewArea.setLineWrap(true);
-        reviewArea.setWrapStyleWord(true);
         reviewArea.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
-        reviewArea.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
         // Limit the text to 500 characters
         reviewArea.addKeyListener(new KeyAdapter() {
@@ -61,15 +88,12 @@ public class Review extends JFrame implements ActionListener {
         add(reviewArea);
 
         // Character limit label
-        charLimitLabel = new JLabel("Character limit: 500");
-        charLimitLabel.setFont(new Font("Tahoma", Font.ITALIC, 12));
+        charLimitLabel = createLabel("Character limit: 500", new Font("Tahoma", Font.ITALIC, 12), new Color(120, 120, 120));
         charLimitLabel.setBounds(50, 260, 200, 20);
-        charLimitLabel.setForeground(new Color(120, 120, 120));
         add(charLimitLabel);
 
         // Rating Label and ComboBox
-        ratingLabel = new JLabel("Rating (1-5):");
-        ratingLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        ratingLabel = createLabel("Rating (1-5):", new Font("Tahoma", Font.BOLD, 14), Color.BLACK);
         ratingLabel.setBounds(50, 290, 100, 20);
         add(ratingLabel);
 
@@ -78,25 +102,18 @@ public class Review extends JFrame implements ActionListener {
         ratingComboBox.setBounds(160, 290, 50, 20);
         add(ratingComboBox);
 
-        postButton = new JButton("Post Review");
+        // Post Review Button
+        postButton = createButton("Post Review", 150, 30, new Font("Tahoma", Font.BOLD, 14), new Color(0, 123, 255), Color.WHITE);
         postButton.setBounds(50, 330, 150, 30);
-        postButton.setBackground(new Color(0, 123, 255)); // Bright button color
-        postButton.setForeground(Color.WHITE);
-        postButton.setFont(new Font("Tahoma", Font.BOLD, 14));
         postButton.addActionListener(this);
         add(postButton);
 
-        // Button to open reviews in another window
-        viewReviewsButton = new JButton("View Reviews");
+        // View Reviews Button
+        viewReviewsButton = createButton("View Reviews", 150, 30, new Font("Tahoma", Font.BOLD, 14), new Color(0, 123, 255), Color.WHITE);
         viewReviewsButton.setBounds(250, 330, 150, 30);
-        viewReviewsButton.setBackground(new Color(0, 123, 255));
-        viewReviewsButton.setForeground(Color.WHITE);
-        viewReviewsButton.setFont(new Font("Tahoma", Font.BOLD, 14));
         viewReviewsButton.addActionListener(this);
         add(viewReviewsButton);
 
-        setSize(600, 450);
-        setLocation(300, 200);
         setVisible(true);
     }
 
@@ -121,7 +138,7 @@ public class Review extends JFrame implements ActionListener {
                 e.printStackTrace();
             }
         } else if (ae.getSource() == viewReviewsButton) {
-            new ReviewsWindow();
+            new Reviews1Window(); // Open the ReviewsWindow
         } else if (ae.getSource() == backButton) {
             dispose(); // Close the current window
         }
@@ -129,5 +146,75 @@ public class Review extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         new Review();
+    }
+}
+
+
+
+class Reviews1Window extends BaseWindow {
+
+    private JTextArea reviewsDisplayArea;
+    private JTextField searchField;
+    private JButton searchButton;
+
+    public Reviews1Window() {
+        super("View Reviews", 600, 400);
+        setLayout(new BorderLayout());
+
+        // Search Panel
+        JPanel searchPanel = new JPanel(new FlowLayout());
+        searchField = new JTextField(10);
+        searchField.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        searchPanel.add(new JLabel("Search by Rating (1-5):"));
+        searchPanel.add(searchField);
+
+        searchButton = createButton("Search", 100, 30, new Font("Tahoma", Font.BOLD, 14), new Color(0, 123, 255), Color.WHITE);
+        searchButton.addActionListener(e -> loadReviews());
+        searchPanel.add(searchButton);
+
+        add(searchPanel, BorderLayout.NORTH);
+
+        // Reviews Display Area
+        reviewsDisplayArea = createTextArea(new Font("Tahoma", Font.PLAIN, 14), false, true);
+        JScrollPane scrollPane = new JScrollPane(reviewsDisplayArea);
+        add(scrollPane, BorderLayout.CENTER);
+
+        loadReviews();
+        setVisible(true);
+    }
+
+    private void loadReviews() {
+        StringBuilder reviews = new StringBuilder();
+        try {
+            Conn conn = new Conn();
+            String query = "SELECT username, review, rating, timestamp FROM reviews";
+
+            // Add rating filter if search field is not empty
+            String ratingFilter = searchField.getText().trim();
+            if (!ratingFilter.isEmpty()) {
+                query += " WHERE rating = " + ratingFilter;
+            }
+
+            query += " ORDER BY timestamp DESC";
+
+            ResultSet rs = conn.s.executeQuery(query);
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String review = rs.getString("review");
+                int rating = rs.getInt("rating");
+                String timestamp = rs.getString("timestamp");
+
+                reviews.append("User: ").append(username).append("\n");
+                reviews.append("Rating: ").append(rating).append("/5\n");
+                reviews.append("Review: ").append(review).append("\n");
+                reviews.append("Posted on: ").append(timestamp).append("\n\n");
+            }
+
+            reviewsDisplayArea.setText(reviews.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error loading reviews.");
+        }
     }
 }
