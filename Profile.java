@@ -175,6 +175,7 @@ public class Profile extends JFrame implements ActionListener {
                     // Show buttons
                     editButton.setVisible(true);
                     saveButton.setVisible(false);
+                    cancelButton.setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(this, "Update failed! Please try again.");
                 }
