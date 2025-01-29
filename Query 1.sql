@@ -1,8 +1,6 @@
 create database airlinemanagementsystem;
 
 use airlinemanagementsystem;
-
-/*create table login(username varchar(20), password varchar(20));*/
 CREATE TABLE login (
     username VARCHAR(20) NOT NULL,
     fullName VARCHAR(255) NOT NULL,
@@ -11,12 +9,12 @@ CREATE TABLE login (
     CONSTRAINT unique_username UNIQUE (username),
     CONSTRAINT unique_email UNIQUE (email)
 );
+insert into login values('admin', 'admin', 'admin', 'admin');
+ALTER TABLE login ADD dob VARCHAR(20) NOT NULL;
 DROP TABLE IF EXISTS login;
 
-insert into login values('admin', 'admin', 'admin', 'admin');
-show tables;
 select *from login;
-/*ALTER TABLE login ADD CONSTRAINT unique_username UNIQUE (username);*/
+ALTER TABLE login ADD CONSTRAINT unique_username UNIQUE (username);
 /*create table passenger (name varchar(20), nationality varchar(20),phone varchar(15),address varchar(50), id varchar(20), gender varchar(20));*/
 CREATE TABLE passenger1 (
     name VARCHAR(50),                
@@ -27,11 +25,11 @@ CREATE TABLE passenger1 (
     gender VARCHAR(10),
     avatar VARCHAR(255)              
 );
-/*select *from passenger;*/
+select *from passenger;
 select *from passenger1;
 
 create table flight(f_code varchar(20), f_name varchar(20), source varchar(40), destination varchar(40));
-SELECT f_code AS "Flight Code", f_name AS "Flight Name", source, destination FROM flight;
+
 describe flight;
 insert into flight values("5001","CSEDU-5221","Dhaka","Sydney");
 insert into flight values("5002","CSEDU-5124","Dhaka","New York");
@@ -54,7 +52,7 @@ select * from reservation;
 ALTER TABLE passenger1 ADD added_by VARCHAR(255);
 ALTER TABLE reservation ADD added_by VARCHAR(255);
 create table cancel(pnr varchar(20), name varchar(40), cancelno varchar(20), fcode varchar(20), ddate varchar(30));
-ALTER TABLE reservation ADD added_by VARCHAR(255);
+
 select * from cancel;
 
 CREATE TABLE reviews (
